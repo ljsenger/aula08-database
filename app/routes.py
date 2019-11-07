@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request, json, url_for, redirect, make_response, flash, session
 from config import Config
 from app.forms import LoginForm
+from app.forms import RegistroForm
+from app.models import Usuario
 from app import app
+from app import db
 
 modelos = { "0":  {"nome": "pegasus", "preco": 500, "promocao": False},
             "1":  {"nome": "vintage", "preco": 1500, "promocao": False},
@@ -12,6 +15,31 @@ u = None
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/registro", methods=["GET", "POST"])
+def registro():
+    form = RegistroForm()
+    if request.method=='GET':
+        return render_template("registro.html", form=form)
+    if form.validate_on_submit():
+        usuario = form.usuario.data
+        senha = form.senha.data
+        email = form.email.data
+        existeU = Usuario.query.filter_by(usuario=usuario).first()
+        existeEmail = Usuario.query.filter_by(email=email).first()
+        if existeU == None and existeEmail == None:
+            novoUsuario = Usuario(usuario=usuario, senha=senha, email=email)
+            db.session.add(novoUsuario)
+            db.session.commit()
+            flash("Usuario registrado com sucesso")
+            return redirect(url_for('login'))
+        else:
+            flash("Nome de usuário ou email já registrado.")
+    return render_template("registro.html", form=form)
+
+        
+
+
 
 @app.route("/user/<name>")
 def user(name):

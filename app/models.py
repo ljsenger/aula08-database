@@ -5,7 +5,7 @@ class Usuario(db.Model):
     usuario = db.Column(db.String(64), index=True, unique=True)
     email   = db.Column(db.String(120), index=True, unique=True)
     senha   = db.Column(db.String(128))
-    endereço = db.Column(db.String(128))
+    endereco = db.Column(db.String(128))
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)  
+        return '<Usuario {}>'.format(self.usuario)  
