@@ -19,9 +19,9 @@ def index():
 @app.route("/registro", methods=["GET", "POST"])
 def registro():
     form = RegistroForm()
-    if request.method=='GET':
-        return render_template("registro.html", form=form)
-    if form.validate_on_submit():
+   # if request.method=='GET':
+   #     return render_template("registro.html", form=form)
+    if request.method != 'GET' and form.validate_on_submit():
         usuario = form.usuario.data
         senha = form.senha.data
         email = form.email.data
